@@ -5,6 +5,7 @@
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
+    "dev": "vite",
     "build": "vite build",
     "install-all": "npm install",
     "render-postbuild": "npm run build"

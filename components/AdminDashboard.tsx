@@ -319,6 +319,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({
                                 <option value="All">All Members</option>
                                 <option value="STUDENT">Students</option>
                                 <option value="USTHAD">Usthads</option>
+                                <option value="ADMIN">Admins</option>
                             </select>
                         )}
                     </div>
