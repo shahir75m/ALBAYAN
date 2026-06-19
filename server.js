@@ -57,7 +57,7 @@ const bookSchema = new mongoose.Schema({
 const userSchema = new mongoose.Schema({
   id: { type: String, required: true, unique: true },
   name: { type: String, required: true },
-  role: { type: String, enum: ['ADMIN', 'STUDENT'], default: 'STUDENT' },
+  role: { type: String, enum: ['ADMIN', 'STUDENT', 'USTHAD'], default: 'STUDENT' },
   class: String,
   avatarUrl: String
 });
@@ -171,8 +171,8 @@ app.get('/api/users', async (req, res) => {
 app.post('/api/users', async (req, res) => {
   try {
     const { id, name, avatarUrl, class: userClass, role: requestedRole } = req.body;
-    let finalRole = requestedRole || 'STUDENT';
-    if (ADMIN_EMAILS.includes(id)) finalRole = 'ADMIN';
+    // Trust the role sent from the frontend — allow ADMIN, USTHAD, STUDENT
+    const finalRole = requestedRole || 'STUDENT';
     const user = await User.findOneAndUpdate({ id: id }, { name, avatarUrl, class: userClass, role: finalRole }, { upsert: true, new: true });
     res.status(201).json(user);
   } catch (err) { res.status(400).json({ message: err.message }); }
@@ -183,8 +183,8 @@ app.post('/api/users/bulk', async (req, res) => {
     const users = req.body;
     const operations = users.map(user => {
       const { _id, __v, ...updateData } = user;
-      let finalRole = user.role || 'STUDENT';
-      if (ADMIN_EMAILS.includes(user.id)) finalRole = 'ADMIN';
+      // Trust the role sent from the frontend — allow ADMIN, USTHAD, STUDENT
+      const finalRole = user.role || 'STUDENT';
       return {
         updateOne: {
           filter: { id: user.id },
